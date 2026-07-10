@@ -1,0 +1,13 @@
+{
+  "name": "groweasy-csv-importer",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build:shared": "pnpm --filter shared build",
+    "test": "pnpm --filter api test"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
