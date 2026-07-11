@@ -1,34 +1,25 @@
 import { LlmProvider } from "./LlmProvider";
 import { CrmRecord } from "@groweasy/shared";
+import { IndexedRow } from "../utils/csvStreamParser";
+import { detectColumnsNaive } from "../utils/csvStreamParser";
+import { ColumnDetectionResult } from "./LlmProvider";
 
-/** * Deterministic, network-free stand-in for GeminiProvider (ADR-004 
- * benefit in action: swapping providers touches only this file's 
- * peer, nothing in services/ or controllers/). 
- * * Use via env flag (LLM_PROVIDER=mock) so SSE plumbing, batching, 
- * job state transitions, and the results UI can all be tested 
- * end-to-end before real Gemini integration lands in Phase 3. 
- * * Simulates realistic behavior: 
- * - Small artificial delay per batch (mimics network latency) 
- * - One row per batch deliberately returns a bad enum, to exercise 
- * the needs_review path through validationService 
- */
 export class MockProvider implements LlmProvider {
   constructor(private simulatedDelayMs: number = 300) {}
-  
-  async extractRecords(
-    rows: Record<string, string>[]
-  ): Promise<Partial<CrmRecord>[]> {
+  async detectContactColumns(headers: string[]): Promise<ColumnDetectionResult> {
+    await new Promise((resolve) => setTimeout(resolve, this.simulatedDelayMs));
+    return detectColumnsNaive(headers);
+  }
+  async extractRecords(rows: IndexedRow[]): Promise<Partial<CrmRecord>[]> {
     await new Promise((resolve) => setTimeout(resolve, this.simulatedDelayMs));
     
-    return rows.map((raw, i) => {
-      const row_index = Number(raw["__row_index"] ?? i);
-      
-      // Seed one intentionally-invalid record per batch (index 0) 
-      // so needs_review is exercised without needing real bad data. 
+    return rows.map(({ row_index, raw }, i) => {
+      // Seed one intentionally-invalid record per multi-row batch so
+      // validationService's needs_review path gets exercised.
       if (i === 0 && rows.length > 1) {
         return {
           row_index,
-          crm_status: "NOT_A_REAL_STATUS" as any, // deliberately invalid 
+          crm_status: "NOT_A_REAL_STATUS" as any, // deliberately invalid
           created_at: null,
           name: raw["name"] ?? raw["Name"] ?? null,
           email: raw["email"] ?? raw["Email"] ?? null,

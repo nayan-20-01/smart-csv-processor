@@ -1,33 +1,40 @@
 // apps/web/src/app/page.tsx
 "use client";
-// Note: We are using a simple header instead of StepRail for testing Phase 2
-import { Dropzone } from "../components/steps/Dropzone";
-import { PreviewTable } from "../components/steps/PreviewTable";
-import { useImportStore } from "../store/importStore";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { StepRail } from "@/components/StepRail";
+import { Dropzone } from "@/components/steps/Dropzone";
+import { PreviewTable } from "@/components/steps/PreviewTable";
+import { ConfirmStep } from "@/components/steps/ConfirmStep";
+import { useImportStore } from "@/store/importStore";
+import { useImportStream } from "@/lib/useImportStream";
 
 export default function Home() {
+  const searchParams = useSearchParams();
   const step = useImportStore((s) => s.step);
+  const jobId = useImportStore((s) => s.jobId);
+  const setJobId = useImportStore((s) => s.setJobId);
+  const setStep = useImportStore((s) => s.setStep);
+
+  useEffect(() => {
+    const urlJobId = searchParams.get("jobId");
+    if (urlJobId && urlJobId !== jobId) {
+      setJobId(urlJobId);
+      setStep("results");
+    }
+  }, [searchParams, jobId, setJobId, setStep]);
+
+  useImportStream(jobId);
 
   return (
-    <main className="p-8 space-y-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-800">GrowEasy CSV Importer</h1>
-      
-      {/* Temporary simplified Step Rail for testing */}
-      <div className="flex gap-4 text-sm font-medium text-gray-500 mb-8 border-b pb-4">
-        <span className={step === "upload" ? "text-blue-600 font-bold" : ""}>1. Upload</span>
-        <span>→</span>
-        <span className={step === "preview" ? "text-blue-600 font-bold" : ""}>2. Preview</span>
-        <span>→</span>
-        <span className={step === "confirm" ? "text-blue-600 font-bold" : ""}>3. Confirm</span>
-        <span>→</span>
-        <span className={step === "results" ? "text-blue-600 font-bold" : ""}>4. Results</span>
-      </div>
-
-      <div className="border rounded-lg shadow-sm p-6 bg-white">
+    <main className="p-8 space-y-6">
+      <h1 className="text-2xl font-bold">GrowEasy CSV Importer</h1>
+      <StepRail />
+      <div className="border rounded p-6">
         {step === "upload" && <Dropzone />}
         {step === "preview" && <PreviewTable />}
-        {step === "confirm" && <p>Confirm step — Phase 4</p>}
-        {step === "results" && <p>Results step — Phase 4</p>}
+        {step === "confirm" && <ConfirmStep />}
+        {step === "results" && <p>Results step — next</p>}
       </div>
     </main>
   );
