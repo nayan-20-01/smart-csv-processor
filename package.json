@@ -1,13 +1,16 @@
 {
   "name": "groweasy-csv-importer",
   "private": true,
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "dev:web": "pnpm --filter web dev",
     "dev:api": "pnpm --filter api dev",
+    "dev": "turbo run dev",
     "build:shared": "pnpm --filter shared build",
     "test": "pnpm --filter api test"
   },
   "devDependencies": {
+    "turbo": "^2.10.4",
     "typescript": "^5.5.0"
   }
 }
