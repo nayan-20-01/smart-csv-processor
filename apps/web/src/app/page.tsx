@@ -30,7 +30,6 @@ function MainContent() {
 
   return (
     <main className="p-8 space-y-6">
-      <h1 className="text-2xl font-bold">GrowEasy CSV Importer</h1>
       <StepRail />
       <div className="border rounded p-6">
         {step === "upload" && <Dropzone />}
