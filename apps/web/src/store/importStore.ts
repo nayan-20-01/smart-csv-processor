@@ -21,6 +21,7 @@ interface ImportState {
   rowsParsedSoFar: number;
   parseWarnings: ParseWarning[];
   warningsAcknowledged: boolean;
+  
   // Job/SSE state
   jobStatus: JobStatus;
   batchesCompleted: number;
@@ -43,6 +44,9 @@ interface ImportState {
   setResult: (result: ImportResult) => void;
   setJobError: (message: string) => void;
   resetJob: () => void;
+  
+  // Wipes the entire store clean (fixes the refresh bug)
+  resetAll: () => void;
 }
 
 export const useImportStore = create<ImportState>((set) => ({
@@ -67,6 +71,7 @@ export const useImportStore = create<ImportState>((set) => ({
   setRowsParsedSoFar: (rowsParsedSoFar) => set({ rowsParsedSoFar }),
   setParseWarnings: (parseWarnings) => set({ parseWarnings }),
   acknowledgeWarnings: () => set({ warningsAcknowledged: true }),
+  
   resetForNewFile: () =>
     set({
       rawRows: [],
@@ -80,9 +85,27 @@ export const useImportStore = create<ImportState>((set) => ({
   setProgress: (batchesCompleted, batchesTotal) => set({ batchesCompleted, batchesTotal }),
   setResult: (result) => set({ result, jobStatus: "complete" }),
   setJobError: (jobErrorMessage) => set({ jobErrorMessage, jobStatus: "error" }),
+  
   resetJob: () =>
     set({
       jobId: null,
+      jobStatus: "idle",
+      batchesCompleted: 0,
+      batchesTotal: 0,
+      result: null,
+      jobErrorMessage: null,
+    }),
+
+  // Factory reset for the entire store
+  resetAll: () =>
+    set({
+      step: "upload",
+      rawRows: [],
+      jobId: null,
+      isParsing: false,
+      rowsParsedSoFar: 0,
+      parseWarnings: [],
+      warningsAcknowledged: false,
       jobStatus: "idle",
       batchesCompleted: 0,
       batchesTotal: 0,

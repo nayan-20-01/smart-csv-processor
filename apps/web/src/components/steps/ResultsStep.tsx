@@ -95,29 +95,32 @@ export function ResultsStep() {
     );
   }
 
+  // --- 🔥 THE UPGRADED PROGRESS BAR UI 🔥 ---
   if (!result) {
     const progressPct = batchesTotal > 0 ? Math.round((batchesCompleted / batchesTotal) * 100) : 0;
     return (
-      <div className="space-y-4 py-4">
-        <div className="flex items-center justify-center gap-3">
-          <div className="h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            {jobStatus === "connecting" && "Connecting to import job…"}
-            {jobStatus === "streaming" &&
-              (batchesTotal > 0
-                ? `Processing batch ${batchesCompleted} of ${batchesTotal}…`
-                : "Processing…")}
-          </p>
-        </div>
-        <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-2.5 overflow-hidden">
-          <div
-            className="bg-blue-600 dark:bg-blue-500 h-2.5 transition-all duration-300"
-            style={{ width: `${progressPct}%` }}
+      <div className="w-full max-w-2xl mx-auto p-6 bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm mb-4 mt-4">
+        <h3 className="text-lg font-medium text-center mb-4 text-gray-900 dark:text-gray-100">
+          {jobStatus === "connecting" 
+            ? "Connecting to AI Pipeline..." 
+            : "Gemini is mapping your CRM data..."}
+        </h3>
+        
+        <div className="w-full bg-gray-100 dark:bg-gray-900 rounded-full h-3 overflow-hidden">
+          <div 
+            className="bg-blue-600 dark:bg-blue-500 h-full transition-all duration-500 ease-out" 
+            style={{ width: `${progressPct}%` }} 
           />
+        </div>
+        
+        <div className="flex justify-between items-center mt-3 text-sm text-gray-500 dark:text-gray-400">
+          <span>Processed {batchesCompleted} of {batchesTotal || '?'} batches</span>
+          <span className="font-medium text-blue-600 dark:text-blue-400">{progressPct}%</span>
         </div>
       </div>
     );
   }
+  // ------------------------------------------
 
   const { imported, skipped, needsReview, totals } = result;
   const reconciled = totals.imported + totals.skipped + totals.needsReview === totals.total;
@@ -145,7 +148,7 @@ export function ResultsStep() {
         </p>
       </div>
 
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap">
         {(["imported", "skipped", "needs_review"] as Tab[]).map((tab) => (
           <button
             key={tab}

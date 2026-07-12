@@ -17,21 +17,33 @@ function MainContent() {
   const jobId = useImportStore((s) => s.jobId);
   const setJobId = useImportStore((s) => s.setJobId);
   const setStep = useImportStore((s) => s.setStep);
+  
+  // Bring in our new reset function!
+  const resetAll = useImportStore((s) => s.resetAll);
 
   useEffect(() => {
     const urlJobId = searchParams.get("jobId");
-    if (urlJobId && urlJobId !== jobId) {
-      setJobId(urlJobId);
-      setStep("results");
+    
+    if (urlJobId) {
+      // 1. If they are loading a shared results link, show the results!
+      if (urlJobId !== jobId) {
+        setJobId(urlJobId);
+        setStep("results");
+      }
+    } else {
+      // 2. If it is a normal visit or page refresh, wipe the memory clean!
+      resetAll();
     }
-  }, [searchParams, jobId, setJobId, setStep]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // The empty array ensures this only fires exactly once on page load
 
   useImportStream(jobId);
 
   return (
-    <main className="p-8 space-y-6">
+    <main className="p-4 md:p-8 space-y-6">
       <StepRail />
-      <div className="border rounded p-6">
+      {/* Added responsive padding and dark mode background fixes here! */}
+      <div className="border border-gray-200 dark:border-gray-800 rounded p-4 md:p-6 bg-white dark:bg-[#0a0a0a]">
         {step === "upload" && <Dropzone />}
         {step === "preview" && <PreviewTable />}
         {step === "confirm" && <ConfirmStep />}
