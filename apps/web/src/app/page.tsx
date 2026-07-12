@@ -1,5 +1,6 @@
 // apps/web/src/app/page.tsx
 "use client";
+import { ResultsStep } from "@/components/steps/ResultsStep";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { StepRail } from "@/components/StepRail";
@@ -34,7 +35,7 @@ export default function Home() {
         {step === "upload" && <Dropzone />}
         {step === "preview" && <PreviewTable />}
         {step === "confirm" && <ConfirmStep />}
-        {step === "results" && <p>Results step — next</p>}
+        {step === "results" && <ResultsStep />}
       </div>
     </main>
   );

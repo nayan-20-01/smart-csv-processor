@@ -1,6 +1,6 @@
 // apps/web/src/store/importStore.ts
 import { create } from "zustand";
-import { ParseWarning } from "@/lib/csvParser";
+import { ParseWarning } from "../lib/csvParser";
 import { RowOutcome, CrmRecord } from "@groweasy/shared";
 
 export type Step = "upload" | "preview" | "confirm" | "results";

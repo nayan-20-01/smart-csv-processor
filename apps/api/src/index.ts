@@ -5,7 +5,8 @@ import { importRouter } from "./routes/importRoutes";
 import { healthRouter } from "./routes/healthRoutes";
 
 const app = express();
-app.use(cors());
+// Hardened CORS: allow specific frontend URL in production, fallback to wildcard for dev
+app.use(cors({ origin: process.env.FRONTEND_URL ?? "*" }));
 app.use(express.json({ limit: "20mb" })); // CSV row payloads can be large
 
 app.use("/api/health", healthRouter);
