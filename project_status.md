@@ -1,8 +1,5 @@
 # project_status.md — Living Progress Tracker
 
-> Paste this file's contents into a new Claude session if credits run out — it contains enough context to resume cold.
-
----
 
 ## Project
 GrowEasy AI-Powered CSV Importer — Software Developer (Intern/Full-Time) assignment.
