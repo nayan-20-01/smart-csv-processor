@@ -148,33 +148,26 @@ export function ResultsStep() {
         </p>
       </div>
 
-      <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap">
-        {(["imported", "skipped", "needs_review"] as Tab[]).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-              activeTab === tab
-                ? "border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400"
-                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            }`}
-          >
-            {tab === "imported" && `Imported (${totals.imported})`}
-            {tab === "skipped" && `Skipped (${totals.skipped})`}
-            {tab === "needs_review" && `Needs Review (${totals.needsReview})`}
-          </button>
-        ))}
+      {/* --- MOBILE OPTIMIZED TAB STRIP --- */}
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800 min-w-max">
+          {(["imported", "skipped", "needs_review"] as Tab[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium border-b-2 -mb-px whitespace-nowrap transition-colors ${
+                activeTab === tab
+                  ? "border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400"
+                  : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+              }`}
+            >
+              {tab === "imported" && `Imported (${totals.imported})`}
+              {tab === "skipped" && `Skipped (${totals.skipped})`}
+              {tab === "needs_review" && `Needs Review (${totals.needsReview})`}
+            </button>
+          ))}
+        </div>
       </div>
-
-      {activeTab === "needs_review" && needsReview.length > 0 && (
-        <button
-          onClick={handleExportNeedsReview}
-          className="flex items-center gap-2 text-sm px-3.5 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 transition-colors"
-        >
-          <Download size={15} />
-          Export needs-review rows as CSV
-        </button>
-      )}
 
       {activeTab === "imported" && (
         <ResultsTable data={imported} columns={importedColumns} emptyMessage="No rows were imported." />
@@ -189,7 +182,20 @@ export function ResultsStep() {
           emptyMessage="No rows need review."
         />
       )}
-      <StartOverButton onClick={handleStartOver} />
+      
+      {/* --- MOBILE OPTIMIZED FOOTER BUTTONS --- */}
+      <div className="flex flex-wrap items-center gap-3">
+        {activeTab === "needs_review" && needsReview.length > 0 && (
+          <button
+            onClick={handleExportNeedsReview}
+            className="flex items-center gap-2 text-sm px-3.5 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200 transition-colors"
+          >
+            <Download size={15} />
+            Export needs-review rows as CSV
+          </button>
+        )}
+        <StartOverButton onClick={handleStartOver} />
+      </div>
     </div>
   );
 }

@@ -155,7 +155,7 @@ export function PreviewTable() {
         </table>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-wrap justify-between items-center gap-3">
         <button
           className="text-sm text-gray-600 underline"
           onClick={() => setStep("upload")}

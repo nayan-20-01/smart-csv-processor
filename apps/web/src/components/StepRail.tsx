@@ -1,4 +1,3 @@
-// apps/web/src/components/StepRail.tsx
 "use client";
 import { Check } from "lucide-react";
 import { useImportStore, Step } from "@/store/importStore";
@@ -13,18 +12,18 @@ const STEPS: { key: Step; label: string }[] = [
 export function StepRail() {
   const currentStep = useImportStore((s) => s.step);
   const currentIndex = STEPS.findIndex((s) => s.key === currentStep);
-
+  
   return (
-    <ol className="flex items-center">
+    <ol className="flex items-center w-full overflow-x-auto">
       {STEPS.map((s, i) => {
         const isComplete = i < currentIndex;
         const isActive = i === currentIndex;
         const isLast = i === STEPS.length - 1;
         return (
-          <li key={s.key} className="flex items-center flex-1 last:flex-none">
-            <div className="flex items-center gap-2.5">
+          <li key={s.key} className="flex items-center flex-1 last:flex-none min-w-fit">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
               <div
-                className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold shrink-0 transition-colors ${
+                className={`flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full text-xs sm:text-sm font-semibold shrink-0 transition-colors ${
                   isComplete
                     ? "bg-blue-600 dark:bg-blue-500 text-white"
                     : isActive
@@ -32,10 +31,11 @@ export function StepRail() {
                     : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500"
                 }`}
               >
-                {isComplete ? <Check size={16} /> : i + 1}
+                {isComplete ? <Check size={14} /> : i + 1}
               </div>
+              {/* Active step always visible, inactive steps hide below 'sm' screens */}
               <span
-                className={`text-sm whitespace-nowrap ${
+                className={`text-xs sm:text-sm whitespace-nowrap ${isActive ? "inline" : "hidden sm:inline"} ${
                   isActive
                     ? "font-semibold text-gray-900 dark:text-gray-100"
                     : isComplete
@@ -48,7 +48,7 @@ export function StepRail() {
             </div>
             {!isLast && (
               <div
-                className={`flex-1 h-px mx-4 transition-colors ${
+                className={`flex-1 h-px mx-2 sm:mx-4 min-w-[8px] transition-colors ${
                   isComplete ? "bg-blue-600 dark:bg-blue-500" : "bg-gray-200 dark:bg-gray-800"
                 }`}
               />

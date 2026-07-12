@@ -1,4 +1,7 @@
 @import "tailwindcss";
+html, body {  
+  overflow-x: hidden;
+}
 
 /* 1. Light Mode Variables */
 :root {
