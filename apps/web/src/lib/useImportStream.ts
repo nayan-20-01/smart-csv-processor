@@ -58,7 +58,7 @@ export function useImportStream(jobId: string | null) {
         if (sseEvent.type === "progress") {
           setProgress(sseEvent.batchesCompleted, sseEvent.batchesTotal);
         } else if (sseEvent.type === "complete") {
-          setResult(sseEvent.result);
+          setResult(sseEvent.result as any);
           eventSource?.close();
         } else if (sseEvent.type === "error") {
           setJobError(sseEvent.message);
