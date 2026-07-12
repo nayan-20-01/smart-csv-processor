@@ -8,7 +8,7 @@ import { validateBatch } from "./validationService";
 import { getLlmProvider } from "./providerFactory";
 import { detectContactColumns } from "./columnDetectionService";
 
-const MAX_CONCURRENT_BATCHES = 4;
+const MAX_CONCURRENT_BATCHES = 1;
 const MAX_RETRIES = 3;
 const BASE_BACKOFF_MS = 500;
 
