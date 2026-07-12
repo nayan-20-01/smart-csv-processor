@@ -1,16 +1,17 @@
 // apps/web/src/app/page.tsx
 "use client";
-import { ResultsStep } from "@/components/steps/ResultsStep";
-import { useEffect } from "react";
+
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { StepRail } from "@/components/StepRail";
 import { Dropzone } from "@/components/steps/Dropzone";
 import { PreviewTable } from "@/components/steps/PreviewTable";
 import { ConfirmStep } from "@/components/steps/ConfirmStep";
+import { ResultsStep } from "@/components/steps/ResultsStep";
 import { useImportStore } from "@/store/importStore";
 import { useImportStream } from "@/lib/useImportStream";
 
-export default function Home() {
+function MainContent() {
   const searchParams = useSearchParams();
   const step = useImportStore((s) => s.step);
   const jobId = useImportStore((s) => s.jobId);
@@ -38,5 +39,13 @@ export default function Home() {
         {step === "results" && <ResultsStep />}
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-gray-500">Loading application...</div>}>
+      <MainContent />
+    </Suspense>
   );
 }
